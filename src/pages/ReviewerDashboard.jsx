@@ -7,6 +7,8 @@ const ReviewerDashboard = () => {
     const [submissions, setSubmissions] = useState([]);
     const [filter, setFilter] = useState('pending');
 
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     useEffect(() => {
         fetchStats();
         fetchSubmissions();
@@ -14,7 +16,7 @@ const ReviewerDashboard = () => {
 
     const fetchStats = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/dashboard/stats');
+            const res = await axios.get(`${API_URL}/api/dashboard/stats`);
             setStats(res.data.stats);
         } catch (error) {
             console.error('Error fetching stats:', error);
@@ -23,9 +25,8 @@ const ReviewerDashboard = () => {
 
     const fetchSubmissions = async () => {
         try {
-            // For reviewer, fetch all or filter by status
-            const statusParam = filter === 'all' ? '' : `&status=${filter}`;
-            const res = await axios.get(`http://localhost:5000/api/submissions?limit=20${statusParam}`);
+            const statusParam = filter !== 'all' ? `&status=${filter}` : '';
+            const res = await axios.get(`${API_URL}/api/submissions?limit=20${statusParam}`);
             setSubmissions(res.data.data);
         } catch (error) {
             console.error('Error fetching submissions:', error);
@@ -87,7 +88,7 @@ const ReviewerDashboard = () => {
                                 <td className="p-4">{sub.contributor?.name}</td>
                                 <td className="p-4">
                                     <span className={`px-2 py-1 rounded text-xs text-white ${sub.status === 'approved' ? 'bg-green-500' :
-                                            sub.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-500'
+                                        sub.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-500'
                                         }`}>
                                         {sub.status.toUpperCase()}
                                     </span>

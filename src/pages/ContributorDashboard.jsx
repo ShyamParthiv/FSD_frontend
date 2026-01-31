@@ -6,23 +6,25 @@ const ContributorDashboard = () => {
     const [stats, setStats] = useState({ total_submissions: 0, pending: 0, approved: 0, rejected: 0 });
     const [submissions, setSubmissions] = useState([]);
 
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     useEffect(() => {
         fetchStats();
-        fetchRecentSubmissions();
+        fetchRecent();
     }, []);
 
     const fetchStats = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/dashboard/stats');
+            const res = await axios.get(`${API_URL}/api/dashboard/stats`);
             setStats(res.data.stats);
         } catch (error) {
-            console.error('Error fetching stats:', error);
+            console.error('Failed to fetch stats', error);
         }
     };
 
-    const fetchRecentSubmissions = async () => {
+    const fetchRecent = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/submissions?limit=5');
+            const res = await axios.get(`${API_URL}/api/submissions?limit=5`);
             setSubmissions(res.data.data);
         } catch (error) {
             console.error('Error fetching submissions:', error);
@@ -74,7 +76,7 @@ const ContributorDashboard = () => {
                                 <td className="p-4">{sub.title}</td>
                                 <td className="p-4">
                                     <span className={`px-2 py-1 rounded text-xs text-white ${sub.status === 'approved' ? 'bg-green-500' :
-                                            sub.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-500'
+                                        sub.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-500'
                                         }`}>
                                         {sub.status.toUpperCase()}
                                     </span>

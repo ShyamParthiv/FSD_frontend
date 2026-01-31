@@ -6,23 +6,28 @@ import { useAuth } from '../context/AuthContext';
 const SubmissionDetails = () => {
     const { id } = useParams();
     const [submission, setSubmission] = useState(null);
+    const [loading, setLoading] = useState(true);
     const { user } = useAuth();
     const navigate = useNavigate();
 
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     useEffect(() => {
+        const fetchSubmission = async () => {
+            try {
+                const res = await axios.get(`${API_URL}/api/submissions/${id}`);
+                setSubmission(res.data.submission);
+            } catch (error) {
+                console.error('Error fetching submission:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
         fetchSubmission();
-    }, [id]);
+    }, [id, API_URL]);
 
-    const fetchSubmission = async () => {
-        try {
-            const res = await axios.get(`http://localhost:5000/api/submissions/${id}`);
-            setSubmission(res.data.submission);
-        } catch (error) {
-            console.error('Error fetching submission:', error);
-        }
-    };
-
-    if (!submission) return <div className="p-8">Loading...</div>;
+    if (loading) return <div className="p-8">Loading...</div>;
+    if (!submission) return <div className="p-8">Submission not found.</div>;
 
     const canResubmit =
         user.role === 'contributor' &&
@@ -38,7 +43,7 @@ const SubmissionDetails = () => {
                     <h1 className="text-3xl font-bold">{submission.title}</h1>
                     <div className="text-right">
                         <span className={`px-3 py-1 rounded text-sm text-white ${submission.status === 'approved' ? 'bg-green-500' :
-                                submission.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-500'
+                            submission.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-500'
                             }`}>
                             {submission.status.toUpperCase()}
                         </span>

@@ -13,13 +13,15 @@ const ResubmitSubmission = () => {
     const navigate = useNavigate();
     const [error, setError] = useState('');
 
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     useEffect(() => {
         fetchOriginal();
     }, [id]);
 
     const fetchOriginal = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/submissions/${id}`);
+            const res = await axios.get(`${API_URL}/api/submissions/${id}`);
             const { title, description, category, file_url } = res.data.submission;
             setFormData({ title, description, category, file_url: file_url || '' });
         } catch (err) {
@@ -34,7 +36,7 @@ const ResubmitSubmission = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`http://localhost:5000/api/submissions/${id}/resubmit`, formData);
+            await axios.post(`${API_URL}/api/submissions/${id}/resubmit`, formData);
             navigate('/dashboard/contributor');
         } catch (err) {
             setError(err.response?.data?.error || 'Resubmission failed');

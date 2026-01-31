@@ -9,6 +9,9 @@ const ReviewSubmission = () => {
     const [status, setStatus] = useState(''); // 'approved' or 'rejected'
     const navigate = useNavigate();
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true);
+
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
     useEffect(() => {
         fetchSubmission();
@@ -16,26 +19,26 @@ const ReviewSubmission = () => {
 
     const fetchSubmission = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/submissions/${id}`);
+            const res = await axios.get(`${API_URL}/api/submissions/${id}`);
             setSubmission(res.data.submission);
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching submission:', error);
+            setError('Failed to load submission');
+            setLoading(false);
         }
     };
 
     const handleReview = async (newStatus) => {
-        // If rejecting, show feedback text area first if not shown? 
-        // Or simpler: two buttons. If Reject clicked and separate state.
         setStatus(newStatus);
         if (newStatus === 'approved') {
-            // Confirm?
             submitReview(newStatus);
         }
     };
 
     const submitReview = async (reviewStatus) => {
         try {
-            await axios.put(`http://localhost:5000/api/submissions/${id}/review`, {
+            await axios.put(`${API_URL}/api/submissions/${id}/review`, {
                 status: reviewStatus,
                 feedback: reviewStatus === 'rejected' ? feedback : null
             });
@@ -45,7 +48,8 @@ const ReviewSubmission = () => {
         }
     };
 
-    if (!submission) return <div className="p-8">Loading...</div>;
+    if (loading) return <div className="p-8">Loading...</div>;
+    if (!submission) return <div className="p-8">Submission not found</div>;
 
     return (
         <div className="p-8 max-w-3xl mx-auto">
