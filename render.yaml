@@ -2,7 +2,7 @@ services:
   - type: static
     name: submissions-frontend
     env: static
-    root: .
+    rootDir: .
     plan: free
     buildCommand: npm install && npm run build
     publishDir: dist
