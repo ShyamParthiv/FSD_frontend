@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import './ContributorDashboard.css';
 
 const ContributorDashboard = () => {
     const [stats, setStats] = useState({ total_submissions: 0, pending: 0, approved: 0, rejected: 0 });
@@ -32,64 +33,66 @@ const ContributorDashboard = () => {
     };
 
     return (
-        <div className="p-8">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold">Contributor Dashboard</h1>
-                <Link to="/submissions/new" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        <div className="dashboard-container">
+            <div className="dashboard-header">
+                <h1 className="dashboard-title">Contributor Dashboard</h1>
+                <Link to="/submissions/new" className="btn-primary">
                     + New Submission
                 </Link>
             </div>
 
-            <div className="grid grid-cols-4 gap-4 mb-8">
-                <div className="bg-white p-4 rounded shadow text-center">
-                    <h3 className="text-gray-500">Total</h3>
-                    <p className="text-2xl font-bold">{stats.total_submissions}</p>
+            <div className="stats-grid">
+                <div className="stat-card">
+                    <h3 className="stat-title">Total Submissions</h3>
+                    <p className="stat-value">{stats.total_submissions}</p>
                 </div>
-                <div className="bg-white p-4 rounded shadow text-center">
-                    <h3 className="text-yellow-500">Pending</h3>
-                    <p className="text-2xl font-bold">{stats.pending}</p>
+                <div className="stat-card">
+                    <h3 className="stat-title">Pending</h3>
+                    <p className="stat-value text-yellow">{stats.pending}</p>
                 </div>
-                <div className="bg-white p-4 rounded shadow text-center">
-                    <h3 className="text-green-500">Approved</h3>
-                    <p className="text-2xl font-bold">{stats.approved}</p>
+                <div className="stat-card">
+                    <h3 className="stat-title">Approved</h3>
+                    <p className="stat-value text-green">{stats.approved}</p>
                 </div>
-                <div className="bg-white p-4 rounded shadow text-center">
-                    <h3 className="text-red-500">Rejected</h3>
-                    <p className="text-2xl font-bold">{stats.rejected}</p>
+                <div className="stat-card">
+                    <h3 className="stat-title">Rejected</h3>
+                    <p className="stat-value text-red">{stats.rejected}</p>
                 </div>
             </div>
 
-            <h2 className="text-xl font-bold mb-4">Recent Submissions</h2>
-            <div className="bg-white rounded shadow text-sm"> {/* text-sm for smaller rows */}
-                <table className="w-full text-left border-collapse">
+            <h2 className="section-title">Recent Submissions</h2>
+            <div className="table-container">
+                <table className="dashboard-table">
                     <thead>
-                        <tr className="border-b">
-                            <th className="p-4">Title</th>
-                            <th className="p-4">Status</th>
-                            <th className="p-4">Date</th>
-                            <th className="p-4">Actions</th>
+                        <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {submissions.map(sub => (
-                            <tr key={sub.id} className="border-b hover:bg-gray-50">
-                                <td className="p-4">{sub.title}</td>
-                                <td className="p-4">
-                                    <span className={`px-2 py-1 rounded text-xs text-white ${sub.status === 'approved' ? 'bg-green-500' :
-                                        sub.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-500'
+                            <tr key={sub.id}>
+                                <td>{sub.title}</td>
+                                <td>
+                                    <span className={`status-badge ${sub.status === 'approved' ? 'status-approved' :
+                                            sub.status === 'rejected' ? 'status-rejected' : 'status-pending'
                                         }`}>
                                         {sub.status.toUpperCase()}
                                     </span>
                                 </td>
-                                <td className="p-4">{new Date(sub.created_at).toLocaleDateString()}</td>
-                                <td className="p-4">
-                                    <Link to={`/submissions/${sub.id}`} className="text-blue-600 hover:underline">View</Link>
+                                <td>{new Date(sub.created_at).toLocaleDateString()}</td>
+                                <td>
+                                    <Link to={`/submissions/${sub.id}`} className="action-link">View</Link>
                                 </td>
                             </tr>
                         ))}
                         {submissions.length === 0 && (
                             <tr>
-                                <td colSpan="4" className="p-4 text-center text-gray-500">No submissions found.</td>
+                                <td colSpan="4" style={{ textAlign: 'center', color: '#888', padding: '20px' }}>
+                                    No submissions found.
+                                </td>
                             </tr>
                         )}
                     </tbody>

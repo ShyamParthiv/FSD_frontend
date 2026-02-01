@@ -9,12 +9,16 @@ import ResubmitSubmission from './pages/ResubmitSubmission';
 import ReviewerDashboard from './pages/ReviewerDashboard';
 import ReviewSubmission from './pages/ReviewSubmission';
 
+import Layout from './components/Layout/Layout';
+
 const ProtectedRoute = ({ children, role }) => {
   const { user, loading } = useAuth();
   if (loading) return <div>Loading...</div>;
   if (!user) return <Navigate to="/login" />;
   if (role && user.role !== role) return <Navigate to="/" />;
-  return children;
+
+  // Wrap protected content in Layout
+  return <Layout>{children}</Layout>;
 };
 
 function AppRoutes() {
