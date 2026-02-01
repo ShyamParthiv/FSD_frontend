@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import './Auth.css';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -29,38 +30,39 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="bg-white p-8 rounded shadow-md w-96">
-                <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
-                {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4">{error}</div>}
+        <div className="auth-container">
+            <div className="auth-card">
+                <h2 className="auth-title">Register</h2>
+                {error && <div className="auth-error">{error}</div>}
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block mb-2">Name</label>
-                        <input name="name" type="text" className="w-full p-2 border rounded" onChange={handleChange} required />
+                    <div className="form-group">
+                        <label className="form-label">Name</label>
+                        <input name="name" type="text" className="form-input" onChange={handleChange} required />
                     </div>
-                    <div className="mb-4">
-                        <label className="block mb-2">Email</label>
-                        <input name="email" type="email" className="w-full p-2 border rounded" onChange={handleChange} required />
+                    <div className="form-group">
+                        <label className="form-label">Email</label>
+                        <input name="email" type="email" className="form-input" onChange={handleChange} required />
                     </div>
-                    <div className="mb-4">
-                        <label className="block mb-2">Password</label>
-                        <input name="password" type="password" className="w-full p-2 border rounded" onChange={handleChange} required />
+                    <div className="form-group">
+                        <label className="form-label">Password</label>
+                        <input name="password" type="password" className="form-input" onChange={handleChange} required />
                     </div>
-                    <div className="mb-6">
-                        <label className="block mb-2">Role</label>
-                        <select name="role" className="w-full p-2 border rounded" onChange={handleChange}>
+                    <div className="form-group">
+                        <label className="form-label">Role</label>
+                        <select name="role" className="form-input" onChange={handleChange}>
                             <option value="contributor">Contributor</option>
                             <option value="reviewer">Reviewer</option>
                         </select>
                     </div>
-                    <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Register</button>
+                    <button type="submit" className="btn-auth">Register</button>
                 </form>
-                <div className="mt-4 text-center">
-                    <Link to="/login" className="text-blue-600">Already have an account? Login</Link>
+                <div className="auth-footer">
+                    <Link to="/login" className="auth-link">Already have an account? Login</Link>
                 </div>
             </div>
         </div>
     );
 };
+
 
 export default Register;
