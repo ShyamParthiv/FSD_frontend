@@ -41,8 +41,9 @@ export const AuthProvider = ({ children }) => {
         return userData;
     };
 
-    const register = async (name, email, password, role) => {
-        await axios.post(`${API_URL}/api/auth/register`, { name, email, password, role });
+    const register = async (name, email, password, role, phone) => {
+        // alert(`Registering to: ${API_URL}`); 
+        await axios.post(`${API_URL}/api/auth/register`, { name, email, password, role, phone });
     };
 
     const logout = () => {

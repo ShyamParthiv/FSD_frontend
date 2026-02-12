@@ -17,7 +17,8 @@ const Login = () => {
             if (user.role === 'contributor') navigate('/dashboard/contributor');
             else navigate('/dashboard/reviewer');
         } catch (err) {
-            setError(err.response?.data?.error || 'Login failed');
+            const errorMessage = err.response?.data?.error || err.response?.data?.message || err.message || 'Login failed';
+            setError(errorMessage);
         }
     };
 

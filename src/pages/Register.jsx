@@ -22,10 +22,12 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await register(formData.name, formData.email, formData.password, formData.role);
+            await register(formData.name, formData.email, formData.password, formData.role, formData.phone);
             navigate('/login');
         } catch (err) {
-            setError(err.response?.data?.error || 'Registration failed');
+            console.error('Registration failed:', err);
+            const errorMessage = err.response?.data?.error || err.response?.data?.message || err.message || 'Registration failed';
+            setError(errorMessage);
         }
     };
 
@@ -37,19 +39,23 @@ const Register = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label className="form-label">Name</label>
-                        <input name="name" type="text" className="form-input" onChange={handleChange} required />
+                        <input name="name" type="text" className="form-input" value={formData.name} onChange={handleChange} required />
                     </div>
                     <div className="form-group">
                         <label className="form-label">Email</label>
-                        <input name="email" type="email" className="form-input" onChange={handleChange} required />
+                        <input name="email" type="email" className="form-input" value={formData.email} onChange={handleChange} required />
                     </div>
                     <div className="form-group">
                         <label className="form-label">Password</label>
-                        <input name="password" type="password" className="form-input" onChange={handleChange} required />
+                        <input name="password" type="password" className="form-input" value={formData.password} onChange={handleChange} required />
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label">Phone (Optional)</label>
+                        <input name="phone" type="tel" className="form-input" value={formData.phone} onChange={handleChange} />
                     </div>
                     <div className="form-group">
                         <label className="form-label">Role</label>
-                        <select name="role" className="form-input" onChange={handleChange}>
+                        <select name="role" className="form-input" value={formData.role} onChange={handleChange}>
                             <option value="contributor">Contributor</option>
                             <option value="reviewer">Reviewer</option>
                         </select>
